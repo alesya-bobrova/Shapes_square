@@ -1,0 +1,25 @@
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, lit
+
+def get_product_category_pairs(df):
+    # Получаем все пары "Имя продукта - Имя категории"
+    pairs_df = df.select("product_name", "category_name")
+
+    # Получаем имена продуктов, у которых нет категорий
+    products_with_no_category = df.filter(col("category_name").isNull()).select("product_name").distinct()
+    
+    # Объединяем результаты
+    result_df = pairs_df.union(products_with_no_category.withColumn("category_name", lit("No category")))
+
+    return result_df
+
+# Пример использования
+spark = SparkSession.builder.appName("product_category_pairs").getOrCreate()
+
+# Предположим, что уже есть датафрейм df с колонками "product_name" и "category_name"
+
+
+result = get_product_category_pairs(df)
+result.show()
+
+spark.stop()
