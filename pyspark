@@ -17,8 +17,6 @@ def get_product_category_pairs(df):
 spark = SparkSession.builder.appName("product_category_pairs").getOrCreate()
 
 # Предположим, что уже есть датафрейм df с колонками "product_name" и "category_name"
-
-
 result = get_product_category_pairs(df)
 result.show()
 
